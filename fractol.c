@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:49:08 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/19 18:27:34 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/19 19:06:57 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main(void)
 	int		max_it;
 	int		color;
 
-	max_it = 43;
+	max_it = 42;
 	data.mlx = mlx_init();
 	data.mlx_win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "Hello world!");
 	data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
@@ -81,7 +81,7 @@ int	main(void)
 			if (k == max_it)
 				color = trgb(0, 255, 255, 255);
 			else
-				color = trgb(0, 0, 0, 0);
+				color = scale_min(k, BLACK, WHITE);
 			my_mlx_pixel_put(&data, i, j, color);
 		}
 	}
