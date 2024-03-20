@@ -6,13 +6,13 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:49:08 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/19 19:06:57 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/20 19:12:58 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_fractol *data, int x, int y, int color)
 {
 	char	*dst;
 
@@ -25,67 +25,71 @@ int	trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-int	closed(int keycode, t_data *data)
+int	closed(int keycode, t_fractol *ftl)
 {
 	if (keycode == 65307)
 	{
-		mlx_destroy_image(data->mlx, data->img);
-		mlx_destroy_window(data->mlx, data->mlx_win);
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
+		mlx_destroy_image(ftl->mlx, ftl->img);
+		mlx_destroy_window(ftl->mlx, ftl->mlx_win);
+		mlx_destroy_display(ftl->mlx);
+		free(ftl->mlx);
+		free(ftl);
+		exit (0);
 	}
-	exit (0);
+	else
+		return (1);
 }
 
+int	mouse_zoom(int keycode, int x, int y, t_fractol *ftl)
+{
+	(void)x;
+	(void)y;
+	if (keycode == 4)
+	{
+		ftl->zoom *= 1.05;
+		if (ftl->max_it > 40)
+			ftl->max_it -= 10;
+	}
+	else if (keycode == 5)
+	{
+		ftl->zoom *= 0.95;
+		ftl->max_it += 10;
+	}
+	else
+	{
+		ftl->zoom = 1;
+		ftl->max_it = 150;
+		ftl->shift_x = 0;
+		ftl->shift_y = 0;
+	}
+	fractol_render(*ftl);
+	return (0);
+}
+
+t_fractol	*fractol_init(t_fractol *fractol)
+{
+	fractol->i = -1;
+	fractol->j = -1;
+	fractol->k = 0;
+	fractol->max_it = 150;
+	fractol->zoom = 1.0;
+	fractol->shift_x = 0.0;
+	fractol->shift_y = 0.0;
+	return (fractol);
+}
 
 int	main(void)
 {
-	t_data	data;
-	t_cord	z;
-	t_cord	c;
+	t_fractol	*ftl;
 
-	int		i;
-	int		j;
-	int		k;
-	int		max_it;
-	int		color;
-
-	max_it = 42;
-	data.mlx = mlx_init();
-	data.mlx_win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "Hello world!");
-	data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
-	data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length,
-								&data.endian);
-	i = -1;
-	while(++i <= WIDTH)
-	{
-		j = -1;
-		while (++j <= HEIGHT)
-		{
-			z.x = 0.0;
-			z.y = 0.0;
-
-			c.x = scale_min(i, -2, 2);
-			c.y = scale_min(j, 2, -2);
-			k = 0;
-			while (k < max_it)
-			{
-				z = mand_suit(sqrt_comp(z), c);
-				if ((z.x * z.x) + (z.y * z.y) > 4)
-				{
-					color = trgb(0, 255, 255, 255);
-					k = max_it;
-				}
-				k++;
-			}
-			if (k == max_it)
-				color = trgb(0, 255, 255, 255);
-			else
-				color = scale_min(k, BLACK, WHITE);
-			my_mlx_pixel_put(&data, i, j, color);
-		}
-	}
-	mlx_put_image_to_window(data.mlx, data.mlx_win, data.img, 0, 0);
-	mlx_hook(data.mlx_win, 2, 1L<<0, &closed, &data);
-	mlx_loop(data.mlx);
+	ftl = malloc(sizeof(t_fractol));
+	ftl = fractol_init(ftl);
+	ftl->mlx = mlx_init();
+	ftl->mlx_win = mlx_new_window(ftl->mlx, WIDTH, HEIGHT, "Hello world!");
+	ftl->img = mlx_new_image(ftl->mlx, WIDTH, HEIGHT);
+	ftl->addr = mlx_get_data_addr(ftl->img, &ftl->bits_per_pixel, &ftl->line_length,
+								&ftl->endian);
+	fractol_render(*ftl);
+	event_init(ftl);
+	mlx_loop(ftl->mlx);
 }
