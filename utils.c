@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:28:18 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/20 19:02:20 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/21 18:22:35 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	fractol_render(t_fractol ftl)
 			ftl.z.x = 0.0;
 			ftl.z.y = 0.0;
 
-			ftl.c.x = (scale_min(ftl.i, -2, 2) * ftl.zoom) + ftl.shift_y;
+			ftl.c.x = (scale_min(ftl.i, -2, 2) * ftl.zoom) + ftl.shift_x;
 			ftl.c.y = (scale_min(ftl.j, 2, -2) * ftl.zoom) + ftl.shift_y;
 			ftl.k = 0;
 			while (ftl.k < ftl.max_it)
@@ -38,14 +38,14 @@ void	fractol_render(t_fractol ftl)
 				if ((ftl.z.x * ftl.z.x) + (ftl.z.y * ftl.z.y) > 4)
 				{
 					color = BLACK;
-					ftl.k = ftl.max_it;
+					break;
 				}
 				ftl.k++;
 			}
 			if (ftl.k == ftl.max_it)
 				color = BLACK;
 			else
-				color = WHITE;
+				color = scale_min(ftl.k, RED, GREEN);
 			my_mlx_pixel_put(&ftl, ftl.i, ftl.j, color);
 		}
 	}
@@ -78,14 +78,14 @@ void	event_init(t_fractol *ftl)
 	mlx_hook(ftl->mlx_win,
 			KeyPress,
 			KeyPressMask,
-			&closed,
+			&key_press,
 			ftl);
 
-	// mlx_hook(ftl->mlx_win,
-	// 		DestroyNotify,
-	// 		StructureNotifyMask,
-	// 		&closed,
-	// 		ftl);
+	mlx_hook(ftl->mlx_win,
+			DestroyNotify,
+			StructureNotifyMask,
+			&cross_closed,
+			ftl);
 
 	mlx_hook(ftl->mlx_win,
 			ButtonPress,

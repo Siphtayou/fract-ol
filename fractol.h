@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:49:10 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/20 18:58:38 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/21 18:17:31 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ t_cord	sqrt_comp(t_cord z);
 
 void	event_init(t_fractol *ftl);
 int		mouse_zoom(int keycode, int x, int y, t_fractol *data);
+int		cross_closed(t_fractol *ftl);
+int		key_press(int keycode, t_fractol *ftl);
 void	fractol_render(t_fractol ftl);
 void	my_mlx_pixel_put(t_fractol *data, int x, int y, int color);
 
