@@ -6,29 +6,46 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:28:18 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/21 18:22:35 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/22 18:02:52 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-double scale_min(double unscale_num, double new_min, double new_max)
+double	scale_min(double unscale_num, double new_min, double new_max)
 {
 	return ((new_max - new_min) * (unscale_num - 0) / (HEIGHT - 0) + new_min);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	if (!s1 || !s2)
+		return (1);
+	i = 0;
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] == s2[i])
+			i++;
+		else
+			return (s1[i] - s2[i]);
+	}
+	return (0);
 }
 
 void	fractol_render(t_fractol ftl)
 {
 	int			color;
 
-	while(++ftl.i <= WIDTH)
+	ftl.i = -1;
+	while (++ftl.i <= WIDTH)
 	{
 		ftl.j = 0;
 		while (++ftl.j <= HEIGHT)
 		{
 			ftl.z.x = 0.0;
 			ftl.z.y = 0.0;
-
 			ftl.c.x = (scale_min(ftl.i, -2, 2) * ftl.zoom) + ftl.shift_x;
 			ftl.c.y = (scale_min(ftl.j, 2, -2) * ftl.zoom) + ftl.shift_y;
 			ftl.k = 0;
@@ -38,14 +55,14 @@ void	fractol_render(t_fractol ftl)
 				if ((ftl.z.x * ftl.z.x) + (ftl.z.y * ftl.z.y) > 4)
 				{
 					color = BLACK;
-					break;
+					break ;
 				}
 				ftl.k++;
 			}
 			if (ftl.k == ftl.max_it)
 				color = BLACK;
 			else
-				color = scale_min(ftl.k, RED, GREEN);
+				color = ftl.color_tab[ftl.k % COLOR_STEPS];
 			my_mlx_pixel_put(&ftl, ftl.i, ftl.j, color);
 		}
 	}
@@ -61,35 +78,15 @@ t_cord	mand_suit(t_cord z1, t_cord z2)
 	return (res);
 }
 
-t_cord	sqrt_comp(t_cord z)
-{
-	t_cord res;
-	res.x = (z.x * z.x) - (z.y * z.y);
-	res.y = 2 * z.x * z.y;
 	// ***BURNING SHIP INVERSE***
 	// ***ajouter (, t_cord) c en param***
 	// res.x = (z.x * z.x) - (z.y * z.y) + c.x;
 	// res.y = 2 * fabs(z.x * z.y) + c.y;
-	return (res);
-}
-
-void	event_init(t_fractol *ftl)
+t_cord	sqrt_comp(t_cord z)
 {
-	mlx_hook(ftl->mlx_win,
-			KeyPress,
-			KeyPressMask,
-			&key_press,
-			ftl);
+	t_cord	res;
 
-	mlx_hook(ftl->mlx_win,
-			DestroyNotify,
-			StructureNotifyMask,
-			&cross_closed,
-			ftl);
-
-	mlx_hook(ftl->mlx_win,
-			ButtonPress,
-			ButtonPressMask,
-			&mouse_zoom,
-			ftl);
+	res.x = (z.x * z.x) - (z.y * z.y);
+	res.y = 2 * z.x * z.y;
+	return (res);
 }
