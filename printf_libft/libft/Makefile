@@ -6,7 +6,7 @@
 #    By: agilles <agilles@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:22:51 by agilles           #+#    #+#              #
-#    Updated: 2024/02/20 17:22:54 by agilles          ###   ########.fr        #
+#    Updated: 2024/03/22 18:27:58 by agilles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,11 +70,11 @@ bonus : $(NAME) $(OBJ) $(OBJ_BONUS)
 	ar rcs $(NAME) $(OBJ) $(OBJ_BONUS)
 
 clean:
-	rm -f $(OBJ)
-	rm -f $(OBJ_BONUS)
+	@rm -f $(OBJ)
+	@rm -f $(OBJ_BONUS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 

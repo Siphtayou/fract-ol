@@ -6,7 +6,7 @@
 #    By: agilles <agilles@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/15 16:34:53 by agilles           #+#    #+#              #
-#    Updated: 2024/03/22 18:20:52 by agilles          ###   ########.fr        #
+#    Updated: 2024/03/22 18:27:28 by agilles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ clean:
 fclean: clean
 	@$(MAKE) fclean -C $$(dirname $(LIBFT))
 	@rm -f $(NAME)
+	@rm -f $(FTL_LIB)
 
 re: fclean all
 

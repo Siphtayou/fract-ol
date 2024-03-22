@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:49:10 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/22 18:22:25 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/22 18:48:37 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ double scale_min(double unscale_num, double new_min, double new_max);
 
 t_cord	mand_suit(t_cord z1, t_cord z2);
 t_cord	sqrt_comp(t_cord z);
+// t_cord	sqrt_comp(t_cord z, t_cord c);
 
 void	event_init(t_fractol *ftl);
 int		mouse_zoom(int keycode, int x, int y, t_fractol *data);

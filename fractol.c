@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:49:08 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/22 18:25:03 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/22 18:49:26 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ t_fractol	*fractol_init(t_fractol *fractol)
 	return (fractol);
 }
 
-int	ftl_error(char *error_msg)
+int	ftl_error(void)
 {
-	ft_printf("%s\n", error_msg);
+	ft_printf("Error jte dirai comment faire plutard\n");
 	return (1);
 }
 
@@ -50,7 +50,7 @@ int	main(int ac, char **av)
 	(void)ac;
 	if ((ft_strcmp(av[1], "Mandelbrot") && ft_strcmp(av[1], "Julia")
 		&& ft_strcmp(av[1], "Burning Ship")) || ac == 1 || ac == 3 || ac > 4)
-		return (ftl_error("Chien"));
+		return (ftl_error());
 	srand(time(NULL));
 	t_fractol	*ftl;
 	ftl = malloc(sizeof(t_fractol));

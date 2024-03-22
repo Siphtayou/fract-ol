@@ -6,7 +6,7 @@
 #    By: agilles <agilles@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/30 16:14:24 by agilles           #+#    #+#              #
-#    Updated: 2024/01/16 15:25:25 by agilles          ###   ########.fr        #
+#    Updated: 2024/03/22 18:27:47 by agilles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,12 +34,12 @@ OBJ = $(SRC:.c=.o)
 all : $(NAME)
 
 clean :
-	rm -f $(OBJ)
-	rm -f $(LIB)
-	rm -f libft/*.o
+	@rm -f $(OBJ)
+	@rm -f $(LIB)
+	@rm -f libft/*.o
 
 fclean : clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 #	rm -f $(EXEC)
 
 re : fclean all
