@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:54:53 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/22 16:33:07 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:38:16 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,6 @@ int	key_press(int keycode, t_fractol *ftl)
 		ftl->shift_x -= 0.5 * ftl->zoom;
 	else if (keycode == 100)
 		ftl->shift_x += 0.5 * ftl->zoom;
-	else if (keycode == 119)
-		ftl->shift_y += 0.5 * ftl->zoom;
-	else if (keycode == 115)
-		ftl->shift_y -= 0.5 * ftl->zoom;
 	else if (keycode == 65451)
 		ftl->max_it += 10;
 	else if (keycode == 65453)
@@ -65,9 +61,28 @@ int	key_press(int keycode, t_fractol *ftl)
 		if (ftl->max_it > 20)
 			ftl->max_it -= 10;
 	}
+	key_up_down(keycode, ftl);
 	key_precision(keycode, ftl);
 	fractol_render(*ftl);
 	return (1);
+}
+
+void	key_up_down(int keycode, t_fractol *ftl)
+{
+	if (keycode == 119)
+	{
+		if (!(ft_strcmp(ftl->name, "Burning Ship")))
+			ftl->shift_y -= 0.5 * ftl->zoom;
+		else
+			ftl->shift_y += 0.5 * ftl->zoom;
+	}
+	else if (keycode == 115)
+	{
+		if (!(ft_strcmp(ftl->name, "Burning Ship")))
+			ftl->shift_y += 0.5 * ftl->zoom;
+		else
+			ftl->shift_y -= 0.5 * ftl->zoom;
+	}
 }
 
 void	key_precision(int keycode, t_fractol *ftl)
@@ -77,27 +92,18 @@ void	key_precision(int keycode, t_fractol *ftl)
 	else if (keycode == 65363)
 		ftl->shift_x += 0.1 * ftl->zoom;
 	else if (keycode == 65362)
-		ftl->shift_y += 0.1 * ftl->zoom;
+	{
+		if (!(ft_strcmp(ftl->name, "Burning Ship")))
+			ftl->shift_y -= 0.1 * ftl->zoom;
+		else
+			ftl->shift_y += 0.1 * ftl->zoom;
+	}
 	else if (keycode == 65364)
-		ftl->shift_y -= 0.1 * ftl->zoom;
+	{
+		if (!(ft_strcmp(ftl->name, "Burning Ship")))
+			ftl->shift_y += 0.1 * ftl->zoom;
+		else
+			ftl->shift_y -= 0.1 * ftl->zoom;
+	}
 	fractol_render(*ftl);
-}
-
-void	event_init(t_fractol *ftl)
-{
-	mlx_hook(ftl->mlx_win,
-		KeyPress,
-		KeyPressMask,
-		&key_press,
-		ftl);
-	mlx_hook(ftl->mlx_win,
-		DestroyNotify,
-		StructureNotifyMask,
-		&ftl_close,
-		ftl);
-	mlx_hook(ftl->mlx_win,
-		ButtonPress,
-		ButtonPressMask,
-		&mouse_zoom,
-		ftl);
 }

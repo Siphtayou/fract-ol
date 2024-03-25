@@ -6,7 +6,7 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:28:18 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/22 18:48:24 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:37:02 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,59 +34,30 @@ int	ft_strcmp(char *s1, char *s2)
 	return (0);
 }
 
-void	fractol_render(t_fractol ftl)
+double	ftl_atodbl(char *nb, int i)
 {
-	int			color;
+	double	frac_part;
+	double	pow;
+	long	int_part;
+	int		s;
 
-	ftl.i = -1;
-	while (++ftl.i <= WIDTH)
+	int_part = 0;
+	frac_part = 0;
+	pow = 1;
+	s = 1;
+	while (nb[i] == 32 || (nb[i] >= 9 && nb[i] == 13))
+		i++;
+	while (nb[i] == '-' || nb[i] == '+')
+		if (nb[i++] == '-')
+			s *= -1;
+	while (nb[i] >= 48 && nb[i] <= 57 && nb[i] != '.')
+		int_part = int_part * 10 + nb[i++] - '0';
+	if (nb[i] == '.')
+		i++;
+	while (nb[i] >= 48 && nb[i] <= 57 && nb[i])
 	{
-		ftl.j = 0;
-		while (++ftl.j <= HEIGHT)
-		{
-			ftl.z.x = 0.0;
-			ftl.z.y = 0.0;
-			ftl.c.x = (scale_min(ftl.i, -2, 2) * ftl.zoom) + ftl.shift_x;
-			ftl.c.y = (scale_min(ftl.j, 2, -2) * ftl.zoom) + ftl.shift_y;
-			ftl.k = 0;
-			while (ftl.k < ftl.max_it)
-			{
-				ftl.z = mand_suit(sqrt_comp(ftl.z), ftl.c);
-				if ((ftl.z.x * ftl.z.x) + (ftl.z.y * ftl.z.y) > 4)
-				{
-					color = BLACK;
-					break ;
-				}
-				ftl.k++;
-			}
-			if (ftl.k == ftl.max_it)
-				color = BLACK;
-			else
-				color = ftl.color_tab[ftl.k % COLOR_STEPS];
-			my_mlx_pixel_put(&ftl, ftl.i, ftl.j, color);
-		}
+		pow /= 10;
+		frac_part = frac_part + (nb[i++] - '0') * pow;
 	}
-	mlx_put_image_to_window(ftl.mlx, ftl.mlx_win, ftl.img, 0, 0);
-}
-
-t_cord	mand_suit(t_cord z1, t_cord z2)
-{
-	t_cord	res;
-
-	res.x = z1.x + z2.x;
-	res.y = z1.y + z2.y;
-	return (res);
-}
-
-	// ***BURNING SHIP INVERSE***
-	// ***ajouter (, t_cord) c en param***
-	// res.x = (z.x * z.x) - (z.y * z.y) + c.x;
-	// res.y = 2 * fabs(z.x * z.y) + c.y;
-t_cord	sqrt_comp(t_cord z)
-{
-	t_cord	res;
-
-	res.x = (z.x * z.x) - (z.y * z.y);
-	res.y = 2 * z.x * z.y;
-	return (res);
+	return (int_part + frac_part * s);
 }

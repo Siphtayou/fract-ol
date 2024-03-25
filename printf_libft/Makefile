@@ -6,14 +6,14 @@
 #    By: agilles <agilles@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/30 16:14:24 by agilles           #+#    #+#              #
-#    Updated: 2024/03/22 18:27:47 by agilles          ###   ########.fr        #
+#    Updated: 2024/03/25 14:45:39 by agilles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 EXEC = ft_printf.out
 NAME = libftprintf.a
 LIB = libft/libft.a
-CC = cc
+CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 SRC =	ft_printf.c\
 		ft_put_s.c\

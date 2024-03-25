@@ -6,12 +6,12 @@
 #    By: agilles <agilles@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:22:51 by agilles           #+#    #+#              #
-#    Updated: 2024/03/22 18:27:58 by agilles          ###   ########.fr        #
+#    Updated: 2024/03/25 14:45:48 by agilles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
-CC = cc
+CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 SRC =	ft_atoi.c\
 		ft_atol.c\

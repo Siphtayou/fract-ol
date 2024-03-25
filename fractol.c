@@ -6,12 +6,11 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:49:08 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/22 18:49:26 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/25 18:02:23 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-#include <time.h>
 
 void	my_mlx_pixel_put(t_fractol *data, int x, int y, int color)
 {
@@ -21,47 +20,86 @@ void	my_mlx_pixel_put(t_fractol *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-t_fractol	*fractol_init(t_fractol *fractol)
-{
-	if (COLOR_MODE)
-		fractol->color_start = BLACK;
-	else
-		fractol->color_start = trgb(0, rand() % 255, rand() % 255, rand() % 255);
-	fractol->i = -1;
-	fractol->j = -1;
-	fractol->k = 0;
-	fractol->max_it = 100;
-	fractol->zoom = 1.0;
-	fractol->shift_x = 0.0;
-	fractol->shift_y = 0.0;
-	// fractol->color_end = RED;
-	fractol->color_end = trgb(0, rand() % 255, rand() % 255, rand() % 255);
-	return (fractol);
-}
-
 int	ftl_error(void)
 {
-	ft_printf("Error jte dirai comment faire plutard\n");
+	ft_printf("Error : Bad parameters supplied to ./fractol\n");
+	ft_printf("\n***THIS IS HOW TO CALL IT***\n");
+	ft_printf("\nMandelbrot : ./fractol Mandelbrot\n");
+	ft_printf("Julia : ./fractol Julia z c (for exemple z = -0.4 c = 0.6)\n");
+	ft_printf("Burning Ship : ./fractol \"Burning Ship\"\n\n");
+	ft_printf("Enjoy :D\n");
 	return (1);
 }
 
-int	main(int ac, char **av)
+void	ftl_cord(t_fractol *ftl)
 {
-	(void)ac;
-	if ((ft_strcmp(av[1], "Mandelbrot") && ft_strcmp(av[1], "Julia")
-		&& ft_strcmp(av[1], "Burning Ship")) || ac == 1 || ac == 3 || ac > 4)
-		return (ftl_error());
-	srand(time(NULL));
-	t_fractol	*ftl;
-	ftl = malloc(sizeof(t_fractol));
-	ftl = fractol_init(ftl);
-	ftl->mlx = mlx_init();
-	ftl->mlx_win = mlx_new_window(ftl->mlx, WIDTH, HEIGHT, "Hello world!");
-	ftl->img = mlx_new_image(ftl->mlx, WIDTH, HEIGHT);
-	ftl->addr = mlx_get_data_addr(ftl->img, &ftl->bits_per_pixel,
-			&ftl->line_length, &ftl->endian);
-	rand_gradiant_init(ftl->color_end, ftl->color_start, ftl);
-	fractol_render(*ftl);
-	event_init(ftl);
-	mlx_loop(ftl->mlx);
+	ftl->z.x = (scale_min(ftl->i, -2, 2) * ftl->zoom) + ftl->shift_x;
+	ftl->z.y = (scale_min(ftl->j, 2, -2) * ftl->zoom) + ftl->shift_y;
+	if (!(ft_strcmp(ftl->name, "Julia")))
+	{
+		ftl->c.x = ftl->jx;
+		ftl->c.y = ftl->jy;
+	}
+	else if (!(ft_strcmp(ftl->name, "Burning Ship")))
+	{
+		ftl->z.x = (scale_min(ftl->i, -2, 2) * ftl->zoom) + ftl->shift_x;
+		ftl->z.y = (scale_min(ftl->j, -2, 2) * ftl->zoom) + ftl->shift_y;
+		ftl->c.x = ftl->z.x;
+		ftl->c.y = ftl->z.y;
+	}
+	else if (!(ft_strcmp(ftl->name, "Mandelbrot")))
+	{
+		ftl->c.x = ftl->z.x;
+		ftl->c.y = ftl->z.y;
+	}
+	ftl->k = 0;
+}
+
+void	fractol_render(t_fractol ftl)
+{
+	ftl.i = -1;
+	while (++ftl.i <= WIDTH)
+	{
+		ftl.j = 0;
+		while (++ftl.j <= HEIGHT)
+		{
+			ftl_cord(&ftl);
+			while (ftl.k < ftl.max_it)
+			{
+				ftl.z = ftl_suit(&ftl);
+				if ((ftl.z.x * ftl.z.x) + (ftl.z.y * ftl.z.y) > 4)
+					break ;
+				ftl.k++;
+			}
+			if (ftl.k == ftl.max_it)
+				ftl.color = BLACK;
+			else if (COLOR_MODE == 0 || COLOR_MODE == 1)
+				ftl.color = ftl.color_tab[ftl.k % COLOR_STEPS];
+			else
+				ftl.color = ftl.color_tab[ftl.k];
+			my_mlx_pixel_put(&ftl, ftl.i, ftl.j, ftl.color);
+		}
+	}
+	mlx_put_image_to_window(ftl.mlx, ftl.mlx_win, ftl.img, 0, 0);
+}
+
+t_cord	ftl_suit(t_fractol *ftl)
+{
+	t_cord	res;
+	t_cord	res2;
+
+	if (!(ft_strcmp(ftl->name, "Burning Ship")))
+	{
+		res.x = (ftl->z.x * ftl->z.x) - (ftl->z.y * ftl->z.y) + ftl->c.x;
+		res.y = 2 * fabs(ftl->z.x * ftl->z.y) + ftl->c.y;
+		return (res);
+	}
+	else
+	{
+		res.x = (ftl->z.x * ftl->z.x) - (ftl->z.y * ftl->z.y);
+		res.y = 2 * ftl->z.x * ftl->z.y;
+		res2.x = res.x + ftl->c.x;
+		res2.y = res.y + ftl->c.y;
+	}
+	return (res2);
 }
