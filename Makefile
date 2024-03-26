@@ -6,7 +6,7 @@
 #    By: agilles <agilles@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/15 16:34:53 by agilles           #+#    #+#              #
-#    Updated: 2024/03/25 17:56:59 by agilles          ###   ########.fr        #
+#    Updated: 2024/03/26 15:35:07 by agilles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRC =	fractol.c\
 		color.c\
 		input.c\
 		init.c\
+		zoom.c\
 
 
 
@@ -48,5 +49,5 @@ $(LIBFT) :
 $(NAME): $(OBJ) $(LIBFT)
 	cp $(LIBFT) $(FTL_LIB)
 	ar rcs $(FTL_LIB) $(OBJ)
-	$(CC) $(OBJ) $(MAIN) $(FTL_LIB) mlx_linux/libmlx_Linux.a -lXext -lX11 -o $(NAME)
+	$(CC) $(OBJ) $(MAIN) $(FTL_LIB) mlx_linux/libmlx_Linux.a -lXext -lX11 -lm -o $(NAME)
 

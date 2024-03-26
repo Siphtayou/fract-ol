@@ -6,30 +6,11 @@
 /*   By: agilles <agilles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:54:53 by agilles           #+#    #+#             */
-/*   Updated: 2024/03/25 17:38:16 by agilles          ###   ########.fr       */
+/*   Updated: 2024/03/26 15:32:19 by agilles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-int	mouse_zoom(int keycode, int x, int y, t_fractol *ftl)
-{
-	(void)x;
-	(void)y;
-	if (keycode == 4)
-		ftl->zoom *= 0.95;
-	else if (keycode == 5)
-		ftl->zoom *= 1.05;
-	else if (keycode == 2)
-	{
-		ftl->zoom = 1;
-		ftl->max_it = 150;
-		ftl->shift_x = 0;
-		ftl->shift_y = 0;
-	}
-	fractol_render(*ftl);
-	return (0);
-}
 
 int	ftl_close(t_fractol *ftl)
 {
